@@ -42,8 +42,11 @@ productos = {
 
 def formatear_moneda(precio):
     # Configura la ubicación para formatear los números como moneda
+    '''
     locale.setlocale(locale.LC_ALL, 'es_AR.UTF-8')
     return locale.currency(precio, grouping=True)
+    '''
+    return round(precio, 2)
 
 def limpiar_precio(precio_str):
     # Eliminar el símbolo de moneda ($) y el . de separador de mil
@@ -118,7 +121,33 @@ tabla_precios = extraer_precio({producto: productos[producto] for producto in pr
 
 # Calcular el monto total para cada supermercado y agregarlo como una fila en el DataFrame
 for supermercado in tabla_precios.columns[2:]:
-    tabla_precios.loc['Total', supermercado] = formatear_moneda(tabla_precios[supermercado].sum())
+    tabla_precios.loc['Total', supermercado] = tabla_precios[supermercado].sum()
+
+# Convertir las columnas a tipo numérico, excluyendo la fila 'Total'
+tabla_precios.iloc[:-1, 2:] = tabla_precios.iloc[:-1, 2:].apply(pd.to_numeric, errors='coerce')
+
+# Calcular el mínimo de los totales
+minimo_total = tabla_precios.iloc[-1, 2:].min()
+
+# Guardamos el total de cada supermercado en variables
+total_coto = tabla_precios.loc['Total', 'Coto']
+total_carrefour = tabla_precios.loc['Total', 'Carrefour']
+total_dia = tabla_precios.loc['Total', 'Día']
+
+# Calcular el ahorro para cada supermercado
+ahorros_coto = total_coto - minimo_total
+ahorros_carrefour = total_carrefour - minimo_total
+ahorros_dia = total_dia - minimo_total
+
+# Agregar fila 'Ahorrás' al DataFrame
+ahorros_df = pd.DataFrame({'Producto': 'Ahorrás', 'Fecha': '', 
+                           'Coto': formatear_moneda(ahorros_coto),
+                           'Carrefour': formatear_moneda(ahorros_carrefour),
+                           'Día': formatear_moneda(ahorros_dia)
+                           }, index=[0])
+
+# Concatenar la fila 'Ahorrás' al DataFrame original
+tabla_precios = pd.concat([tabla_precios, ahorros_df])
 
 # Mostrar la tabla con el formato aplicado
 st.table(tabla_precios)
