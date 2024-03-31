@@ -129,6 +129,12 @@ tabla_precios.iloc[:-1, 2:] = tabla_precios.iloc[:-1, 2:].apply(pd.to_numeric, e
 # Calcular el mínimo de los totales
 minimo_total = tabla_precios.iloc[-1, 2:].min()
 
+# Determinar en qué supermercado se encuentra el total mínimo
+supermercado_minimo = tabla_precios.iloc[-1, 2:].idxmin()
+
+# Generar el mensaje de ahorro
+mensaje_ahorro = f"Comprando en {supermercado_minimo}, ahorrás"
+
 # Guardamos el total de cada supermercado en variables
 total_coto = tabla_precios.loc['Total', 'Coto']
 total_carrefour = tabla_precios.loc['Total', 'Carrefour']
@@ -140,7 +146,7 @@ ahorros_carrefour = total_carrefour - minimo_total
 ahorros_dia = total_dia - minimo_total
 
 # Agregar fila 'Ahorrás' al DataFrame
-ahorros_df = pd.DataFrame({'Producto': 'Ahorrás', 'Fecha': '', 
+ahorros_df = pd.DataFrame({'Producto': mensaje_ahorro, 'Fecha': '', 
                            'Coto': formatear_moneda(ahorros_coto),
                            'Carrefour': formatear_moneda(ahorros_carrefour),
                            'Día': formatear_moneda(ahorros_dia)
