@@ -14,7 +14,9 @@ CREATE DATABASE bot_super
 
 CREATE USER administrador WITH PASSWORD 'admin391';	-- Crear nuevo usuario y contraseña
 GRANT ALL PRIVILEGES ON DATABASE bot_super TO administrador; -- Darle al usuario los privilegios para gestionar la bbdd.
-GRANT ALL PRIVILEGES ON TABLE productos TO administrador;
+GRANT ALL PRIVILEGES ON TABLE productos TO administrador; -- Darle al usuario permisos sobre la tabla productos
+GRANT ALL PRIVILEGES ON TABLE precios_productos TO administrador; -- Darle al usuario permisos sobre la tabla precios_productos
+GRANT USAGE, SELECT ON SEQUENCE precios_productos_id_seq TO administrador;
 
 CREATE TABLE productos (
     producto_id SERIAL PRIMARY KEY,
@@ -32,5 +34,16 @@ VALUES	('Azúcar Ledesma 1kg', 'https://www.cotodigital3.com.ar/sitios/cdigi/pro
 		('Yerba Mate Playadito Suave 1 Kg', 'https://www.cotodigital3.com.ar/sitios/cdigi/producto/-yerba-mate-suave-playadito-1-kg/_/A-00502038-00502038-200', 'https://www.carrefour.com.ar/yerba-mate-playadito-suave-con-palo-1-kg/p', 'https://diaonline.supermercadosdia.com.ar/yerba-mate-playadito-suave-1-kg-269577/p'),
 		('Aceite de Girasol Natura 1,5 Lts', 'https://www.cotodigital3.com.ar/sitios/cdigi/producto/-aceite-girasol-natura-botella-15-l/_/A-00014076-00014076-200', 'https://www.carrefour.com.ar/aceite-de-girasol-natura-15-l/p', 'https://diaonline.supermercadosdia.com.ar/aceite-de-girasol-natura-15-lts-78856/p');
 
-SELECT * FROM productos;
+-- Creación de tabla para registro diario de precios de cada supermercado.
+CREATE TABLE precios_productos (
+    id SERIAL PRIMARY KEY,
+    producto VARCHAR(255) NOT NULL,
+    fecha DATE NOT NULL,
+    precio_coto DECIMAL(10, 2),
+    precio_carrefour DECIMAL(10, 2),
+    precio_dia DECIMAL(10, 2)
+);
 
+
+SELECT * FROM precios_productos;
+SELECT * FROM productos;
