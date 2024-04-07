@@ -62,10 +62,11 @@ def obtener_nombres_productos():
 
 def consultar_precios_productos():
     try:
-        consulta = "SELECT * FROM precios_productos"
+        consulta = '''SELECT DISTINCT ON (producto) producto, fecha, precio_coto, precio_carrefour, precio_dia
+                      FROM precios_productos
+                      ORDER BY producto, fecha DESC;'''
         precios = ejecutar_consulta(consulta)
         df_precios = pd.DataFrame(precios)
-        df_precios = df_precios.drop(columns=df_precios.columns[0])  # Eliminar la primera columna, que es 'index'
         # Supongamos que quieres cambiar los nombres de las columnas 'precio_coto', 'precio_carrefour' y 'precio_dia' a minúsculas
         nuevos_nombres = {'precio_coto': 'Coto', 'precio_carrefour': 'Carrefour', 'precio_dia': 'Día'}
         # Utiliza el método rename() para cambiar los nombres de las columnas

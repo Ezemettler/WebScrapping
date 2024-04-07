@@ -47,3 +47,11 @@ CREATE TABLE precios_productos (
 
 SELECT * FROM precios_productos;
 SELECT * FROM productos;
+
+INSERT INTO precios_productos (producto, fecha, precio_coto, precio_carrefour, precio_dia)
+VALUES ('Polenta Blanca Flor', '2024-04-06', 809.00, NULL, 709.00);
+
+SELECT DISTINCT ON (producto) producto, fecha, precio_coto, precio_carrefour, precio_dia
+FROM precios_productos
+ORDER BY producto, fecha DESC;
+
