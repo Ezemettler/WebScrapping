@@ -40,13 +40,12 @@ def actualizar_tabla_precios():
         data.append(precios)  # Agrega el diccionario de precios del producto a la lista de datos
 
     df = pd.DataFrame(data)     # Convertimos a dataframe.
-    df.head()
     # Renombrar las columnas del DataFrame para que coincidan con las columnas de la tabla de la base de datos
     df = df.rename(columns={"Coto": "precio_coto", "Carrefour": "precio_carrefour", "Día": "precio_dia"})
     engine = db.conectar_bd()
     if engine:
         try:
-            df.to_sql('precios_productos', con=engine, if_exists='append', index=False)  # Insertar DataFrame en la tabla
+            df.to_sql('precios_productos', con=engine, if_exists='append', index=False, chunksize=200)  # Insertar DataFrame en la tabla
             print("Datos cargados en la base de datos correctamente.")
         except Exception as e:
             print("Error al cargar datos en la base de datos:", e)
