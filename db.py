@@ -51,7 +51,7 @@ def ejecutar_consulta(consulta):
 def obtener_nombres_productos():
     try:
         # Función para obtener los nombres de los productos desde la base de datos
-        consulta = 'SELECT nombre_producto FROM productos'
+        consulta = 'SELECT nombre_producto FROM productos ORDER BY nombre_producto ASC;'
         nombres_productos = ejecutar_consulta(consulta)
         # Transformar la lista de tuplas en una lista plana de nombres de productos
         return [nombre[0] for nombre in nombres_productos] if nombres_productos else [] 
