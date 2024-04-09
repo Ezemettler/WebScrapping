@@ -75,3 +75,25 @@ def consultar_precios_productos():
     except Exception as e:
         print("Error al consultar los precios de los productos:", e)
         return None
+
+
+def obtener_ultimo_precio(supermercado, producto):
+# Consulta SQL dinámica para obtener el último precio según el supermercado y el producto
+    consulta = """
+        SELECT 
+            CASE
+                WHEN :supermercado = 'Coto' THEN precio_coto
+                WHEN :supermercado = 'Carrefour' THEN precio_carrefour
+                WHEN :supermercado = 'Día' THEN precio_dia
+            END AS precio
+        FROM precios_productos
+        WHERE producto = :producto
+        ORDER BY fecha DESC
+        LIMIT 1;
+    """
+    parametros = {"supermercado": supermercado, "producto": producto}       # Parámetros de la consulta
+    engine = conectar_bd()  # Conecta a la base de datos
+    with engine.connect() as conn:
+        resultado = conn.execute(text(consulta), parametros)        # Ejecutar la consulta y obtener el resultado
+    precio = resultado.fetchone()[0] if resultado.fetchone() is not None else None     # Obtener el precio del resultado
+    return precio

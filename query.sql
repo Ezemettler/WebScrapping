@@ -104,3 +104,18 @@ CREATE INDEX idx_producto ON precios_productos (producto);
 
 SELECT * FROM precios_productos;
 SELECT * FROM productos;
+
+
+SELECT precio_coto
+FROM precios_productos
+WHERE producto = 'Azúcar Ledesma 1kg'
+ORDER BY fecha DESC
+LIMIT 1;
+
+DELETE FROM precios_productos
+WHERE fecha = '2024-04-09';
+
+
+
+
+

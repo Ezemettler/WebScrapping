@@ -33,6 +33,12 @@ def actualizar_tabla_precios():
                     precio = web_scrapping.extraer_precio_carrefour(url)  # Extrae el precio de Carrefour
                 elif supermercado == "Día":  # Si es el enlace de Día
                     precio = web_scrapping.extraer_precio_dia(url)  # Extrae el precio de Día
+                
+                if precio is None:  # Si no se pudo obtener el precio desde la web, buscar el último precio en la base de datos
+                    ultimo_precio = db.obtener_ultimo_precio(producto, supermercado)
+                    if ultimo_precio is not None:
+                        precio = ultimo_precio
+
             except Exception as e:  # Captura cualquier error que ocurra durante la extracción del precio
                 print(f"Error al extraer el precio del producto {producto} en {supermercado}: {e}")
             # Asigna el precio obtenido al supermercado correspondiente en el diccionario de precios
